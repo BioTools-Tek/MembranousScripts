@@ -1,0 +1,3 @@
+
+file <- load(commandArgs(TRUE)[1]);
+write.table(metal, commandArgs(TRUE)[2]);

@@ -1,21 +1,25 @@
 #!/bin/bash
 
 usage(){
-	echo "`basename $0` <output_dir>" >&2
+	echo "`basename $0` <output_dir> [chrom]" >&2
 	exit
 }
 
-[ $# != 1 ] && usage
+chroms="`seq 1 22` X Y"
+
+[ $# -lt 1 ] && usage
+[ $# = 2 ] && chroms=$2
+
 
 fold=$1
 mkdir -p $fold
 
-for chrom in `seq 1 22` X; do
+for chrom in $chroms; do
 	chr="chr$chrom";
 
 	echo -n "$chr...">&2
-#	mysql -ugenome --host=genome-mysql.cse.ucsc.edu -A --execute="SELECT chrom,chromStart,chromEnd,name,score,strand from hg19.snp137 WHERE chrom=\"$chr\";"\
-	mysql -ugenome --host=genome-mysql.cse.ucsc.edu -A --execute="SELECT chrom,chromStart,chromEnd,name,score,strand from hg18.snp130 WHERE chrom=\"$chr\";"\ > $fold/snppos.$chr
+	#mysql -ugenome --host=genome-mysql.cse.ucsc.edu -A --execute="SELECT chrom,chromStart,chromEnd,name,score,strand from hg19.snp138 WHERE chrom=\"$chr\";" > $fold/snppos.$chr
+	mysql -ugenome --host=genome-mysql.cse.ucsc.edu -A --execute="SELECT chrom,chromStart,chromEnd,name,score,strand from hg19.snp135 WHERE chrom=\"$chr\";" > $fold/snppos.$chr
 	echo "`wc -l $fold/snppos.$chr`"
 
 done

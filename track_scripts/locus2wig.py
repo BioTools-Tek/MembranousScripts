@@ -29,7 +29,7 @@ def usageExit():
 	print >> sys.stderr, '''Converts locusZoom input file formats to bigwig: 
 e.g. chr:position<tab>E_LOG  file
 
-usage: %s <locusZoom.input> "<track name>" [max_y_value]
+usage: %s <locusZoom.input> "<track name>" [max_y_value] [min_x max_x]
 
 max_y_value is automatically calculated if not given
 
@@ -37,20 +37,25 @@ max_y_value is automatically calculated if not given
 	exit(-1)
 
 
+min=sys.maxint;
+max=-1
+
 if len(sys.argv)>=3:
 	lfile=sys.argv[1]
 	trackname=sys.argv[2]
 	if len(sys.argv)==4:
 		max_y_val=int(sys.argv[3])
-	elif len(sys.argv)>4:
+	elif len(sys.argv)==6:
+		max_y_val=int(sys.argv[3])
+		min=int(sys.argv[4])
+		max=int(sys.argv[5])
+	else:
 		usageExit()
 else:
 	usageExit()
 
 
 chrom=""
-min=sys.maxint;
-max=-1
 
 score_max=25;
 arr=[]
@@ -89,7 +94,8 @@ for line in open(lfile):
 if (max_y_val==-1):
 	yscale = (10*((score_max/10)+2)) 
 	print >> sys.stderr, "max-y-scale set at:", yscale;
-
+else:
+	yscale = max_y_val
 
 #Print
 print "browser position", "%s:%d-%d" % (chrom, min-10,max+10)
