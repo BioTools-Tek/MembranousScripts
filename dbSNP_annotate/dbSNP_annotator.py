@@ -3,14 +3,19 @@
 import sys
 
 def usage():
-	print >> sys.stderr, "%s <chr:pos_input> <dbSNPCoding folder>" % sys.argv[0].split('/')[-1]
+	print >> sys.stderr, "%s <chr:pos_input> <dbSNPCoding folder> [--ends-only]" % sys.argv[0].split('/')[-1]
 	exit(0)
 
 
-len(sys.argv)!=3 and usage()
+len(sys.argv)<3 and usage()
 
 positions_file=sys.argv[1]
 snpconfig_fold=sys.argv[2]
+try:
+	ends=sys.argv[3].startswith("--ends")
+except IndexError:
+	ends=False
+
 
 
 class SNPHandler:
@@ -81,17 +86,30 @@ for line in open(positions_file,'r'):
 	tokes = line.splitlines()[0].split(':')
 	
 	chrom=tokes[0].strip()
-	pos = int(tokes[1].strip())
+	try:
+		pos = int(tokes[1].strip())
+	except ValueError:
+		continue
 	
 	if sh.curr_chrom != chrom:
 		sh.openNewSNP(chrom)
 
+	valid_snps="--"
 	try:
+		buff=[]
 		snps = sh.snp_map[chrom][pos]
+
+		if ends:
+			for mark,typ in snps:
+				if typ=="end":
+					buff.append(mark)
+			valid_snps=','.join(buff)
+		else:
+			valid_snps=str(snps)
 		found +=1
 	except KeyError:
-		snps=""
+		valid_snps="--"
 
-	print '\t'.join(tokes),'\t',snps
+	print '\t'.join(tokes),'\t',valid_snps
 
 print >> sys.stderr, "\nFound:",found
