@@ -1,0 +1,16 @@
+   1342 CCAA
+    334 CCAG
+    314 CCGA
+    149 CCGG
+    105 CTAA
+     30 CTAG
+     33 CTGA
+     20 CTGG
+     92 TCAA
+     30 TCAG
+     20 TCGA
+     11 TCGG
+     19 TTAA
+      1 TTAG
+      1 TTGA
+      3 TTGG
