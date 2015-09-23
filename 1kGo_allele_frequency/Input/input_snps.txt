@@ -1,0 +1,2 @@
+chr2	PLA2R1  	rs4664308
+chr6	HLA-DQA1	rs2187668
